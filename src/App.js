@@ -71,7 +71,10 @@ class App extends Component {
                     total={this.state.total}
                   />
                   <Routes>
-                    <Route path="/" element={<Navigate to="/all" />} />
+                    <Route
+                      path="/React-shop"
+                      element={<Navigate to="/all" />}
+                    />
                     <Route
                       path={`/${categories[0].name}`}
                       element={

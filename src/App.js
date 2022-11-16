@@ -19,15 +19,17 @@ class App extends Component {
     this.addToOrder = this.addToOrder.bind(this)
   }
   componentDidMount() {
-    const currencyDropdown = document.querySelector('.dropdown-text')
+    let currencyDropdown = document.querySelector('.dropdown-text')
     document.addEventListener('click', () => {
       switch (currencyDropdown.textContent.charAt(0)) {
         case '£':
+          this.forceUpdate()
           this.setState({
             currencyKey: 1,
           })
           break
         case 'A':
+          this.forceUpdate()
           this.setState({
             currencyKey: 2,
           })
@@ -64,12 +66,7 @@ class App extends Component {
               console.log(currencyKey)
               return (
                 <div>
-                  <Header
-                    currency={currencyKey}
-                    orders={orders}
-                    data={data}
-                    total={this.state.total}
-                  />
+                  <Header currency={currencyKey} orders={orders} data={data} />
                   <Routes>
                     <Route
                       path="/React-shop"
@@ -120,7 +117,6 @@ class App extends Component {
                       path="/cart"
                       element={
                         <Cart
-                          total={this.state.total}
                           orders={this.state.orders}
                           currency={currencyKey}
                         />

@@ -62,6 +62,7 @@ export default class Pdp extends Component {
             return <div>loading</div>
           }
           const { product } = data
+          const parse = require('html-react-parser')
           return (
             <div
               className="PDP"
@@ -198,8 +199,7 @@ export default class Pdp extends Component {
                           }}
                           className="add_to_cart_btn"
                         >
-                          {' '}
-                          Add to cart{' '}
+                          Add to cart
                         </button>
                       ) : (
                         <button className="add_to_cart_btn out-of-stock">
@@ -207,11 +207,7 @@ export default class Pdp extends Component {
                         </button>
                       )}
 
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: product.description,
-                        }}
-                      ></p>
+                      <p> {parse(product.description)}</p>
                     </div>
                   </div>
                 </div>
@@ -223,4 +219,3 @@ export default class Pdp extends Component {
     )
   }
 }
-

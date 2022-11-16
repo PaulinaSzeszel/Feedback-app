@@ -42,5 +42,4 @@ const getSelectedCol = () => {
 
   return arr
 }
-
-export { getOccurrence, convertHexToSwatch, getSelectedAtr, getSelectedCol }
+export { convertHexToSwatch, getSelectedAtr, getSelectedCol }

@@ -31,7 +31,7 @@ export default class CartOverlay extends Component {
   render() {
     const { currency, orders } = this.props
     return (
-      <div>
+      <div className="cart_overlay_bag">
         <h3>My bag</h3>
         {orders.map((arr, index) => {
           return arr[0].map((item) => {
@@ -45,6 +45,63 @@ export default class CartOverlay extends Component {
                       {item.prices[currency].currency.symbol}
                       {item.prices[currency].amount}
                     </p>
+                    {item.attributes.map((atr, index) => {
+                      if (atr.name !== 'Color') {
+                        return (
+                          <div className="attributes-section-product-page-bag">
+                            <p className="attribute-name-bag">{atr.name}:</p>
+                            <ul className="product-attributes-bag">
+                              {atr.items.map((atr2, index2) => {
+                                return (
+                                  <li
+                                    className={
+                                      arr[1][0].find((el) => {
+                                        return el.value === atr2.value
+                                      }) &&
+                                      arr[1][0].find(
+                                        (ind) => ind.id === `${index}${index2}`
+                                      )
+                                        ? 'attribute-selected-bag'
+                                        : ''
+                                    }
+                                    value={atr2.value}
+                                    data-index={`${index}${index2}`}
+                                  >
+                                    {atr2.value}
+                                  </li>
+                                )
+                              })}
+                            </ul>
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div className="attributes-section attributes-section-product-page">
+                            <p className="attribute-name-bag">{atr.name}:</p>
+                            <ul className="product-color-bag">
+                              {atr.items.map((atr2, index2) => {
+                                return (
+                                  <li
+                                    className={
+                                      arr[2][0].find(
+                                        (el) => el.value === atr2.value
+                                      ) &&
+                                      arr[2][0].find(
+                                        (ind) => ind.id === `${index}${index2}`
+                                      )
+                                        ? 'color-selected-bag'
+                                        : ''
+                                    }
+                                    value={atr2.value}
+                                    data-index={`${index}${index2}`}
+                                  ></li>
+                                )
+                              })}
+                            </ul>
+                          </div>
+                        )
+                      }
+                    })}
                   </div>
                   <div></div>
                   <div className="quantity_block">
@@ -56,63 +113,6 @@ export default class CartOverlay extends Component {
                     <img src={item.gallery[0]} alt={item.name} />
                   </div>
                 </div>
-                {item.attributes.map((atr, index) => {
-                  if (atr.name !== 'Color') {
-                    return (
-                      <div className="attributes-section-product-page-bag">
-                        <p className="attribute-name-bag">{atr.name}:</p>
-                        <ul className="product-attributes-bag">
-                          {atr.items.map((atr2, index2) => {
-                            return (
-                              <li
-                                className={
-                                  arr[1][0].find((el) => {
-                                    return el.value === atr2.value
-                                  }) &&
-                                  arr[1][0].find(
-                                    (ind) => ind.id === `${index}${index2}`
-                                  )
-                                    ? 'attribute-selected-bag'
-                                    : ''
-                                }
-                                value={atr2.value}
-                                data-index={`${index}${index2}`}
-                              >
-                                {atr2.value}
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      </div>
-                    )
-                  } else {
-                    return (
-                      <div className="attributes-section attributes-section-product-page">
-                        <p className="attribute-name-bag">{atr.name}:</p>
-                        <ul className="product-color-bag">
-                          {atr.items.map((atr2, index2) => {
-                            return (
-                              <li
-                                className={
-                                  arr[2][0].find(
-                                    (el) => el.value === atr2.value
-                                  ) &&
-                                  arr[2][0].find(
-                                    (ind) => ind.id === `${index}${index2}`
-                                  )
-                                    ? 'color-selected-bag'
-                                    : ''
-                                }
-                                value={atr2.value}
-                                data-index={`${index}${index2}`}
-                              ></li>
-                            )
-                          })}
-                        </ul>
-                      </div>
-                    )
-                  }
-                })}
               </div>
             )
           })

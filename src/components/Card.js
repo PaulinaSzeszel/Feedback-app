@@ -1,19 +1,19 @@
-mport React, { Component } from "react";
+import React, { Component } from 'react'
 
 class Card extends Component {
   displayInStock = () => {
-    const cards = document.querySelectorAll(".card");
+    const cards = document.querySelectorAll('.card')
 
     cards.forEach((card) => {
-      if (card.getAttribute("data-in-stock") === "false") {
-        card.classList.add("nostock");
+      if (card.getAttribute('data-in-stock') === 'false') {
+        card.classList.add('nostock')
       } else {
-        card.classList.remove("nostock");
+        card.classList.remove('nostock')
       }
-    });
-  };
+    })
+  }
   componentDidMount() {
-    this.displayInStock();
+    this.displayInStock()
   }
   render() {
     return (
@@ -27,8 +27,7 @@ class Card extends Component {
         />
         <span>{this.props.name}</span>
         <b>{this.props.price}</b>
-        <div
-        >
+        <div>
           <img
             width={52}
             height={52}
@@ -38,8 +37,8 @@ class Card extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Card;
+export default Card

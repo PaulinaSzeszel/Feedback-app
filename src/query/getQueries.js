@@ -6,9 +6,7 @@ const getAllProducts = gql`
       name
       products {
         id
-        attributes {
-          name
-        }
+
         name
         inStock
         gallery
@@ -83,32 +81,32 @@ query {
           
 `
 
-const productRequest = (productID) => gql`
-query {
-  product(id: "${productID}") {
-    name
-    inStock
-    gallery
-    description
-    category
-    attributes {
-      
+const productRequest = gql`
+  query product($id: String!) {
+    product(id: $id) {
+      id
+
       name
+
+      id
+      name
+      type
       items {
         id
-        value
         displayValue
+        value
       }
     }
+
     prices {
-      amount
       currency {
+        label
         symbol
       }
+      amount
     }
     brand
   }
-}
 `
 
 export { getAllProducts, getAllCategories, productRequest, categoryRequest }

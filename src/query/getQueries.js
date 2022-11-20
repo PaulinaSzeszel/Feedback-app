@@ -1,26 +1,32 @@
 import { gql } from '@apollo/client'
-
-const getAllProducts = gql`
-  query {
+export const getAllCategories = gql`
+  {
     categories {
       name
+    }
+    currencies {
+      symbol
+    }
+  }
+`
+
+export const GET_PRODUCTS_BY_CATEGORY = gql`
+  query category($input: CategoryInput) {
+    category(input: $input) {
       products {
         id
-
+        brand
         name
         inStock
         gallery
-        description
-        category
-        brand
         attributes {
           id
           name
           type
           items {
             id
-            displayValue
             value
+            displayValue
           }
         }
         prices {
@@ -34,79 +40,32 @@ const getAllProducts = gql`
   }
 `
 
-const getAllCategories = gql`
-  query {
-    categories {
-      name
-    }
-    currencies {
-      symbol
-    }
-  }
-`
-
-const categoryRequest = (category) => gql`
-query {
-  category (input: {title: "${category}"}) {
-    products {
-          id
-          attributes {
-            name
-          }
-          name
-          inStock
-          gallery
-          description
-          category
-          brand
-          attributes {
-            id
-            name
-            type
-            items {
-              id
-              displayValue
-              value
-            }
-          }
-          prices {
-            currency {
-              symbol
-            }
-            amount
-          }
-        }
-  }
-  }
-          
-`
-
-const productRequest = gql`
+export const GET_PRODUCTS_BY_ID = gql`
   query product($id: String!) {
     product(id: $id) {
       id
-
       name
-
-      id
-      name
-      type
-      items {
+      inStock
+      gallery
+      description
+      attributes {
         id
-        displayValue
-        value
+        name
+        type
+        items {
+          id
+          displayValue
+          value
+        }
       }
-    }
-
-    prices {
-      currency {
-        label
-        symbol
+      prices {
+        currency {
+          label
+          symbol
+        }
+        amount
       }
-      amount
+      brand
     }
-    brand
   }
 `
-
-export { getAllProducts, getAllCategories, productRequest, categoryRequest }

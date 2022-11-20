@@ -1,35 +1,57 @@
-import React, { Component } from 'react'
-import { Query } from '@apollo/react-components'
-import { getAllCategories } from '../query/getQueries'
+import { PureComponent } from 'react'
+export class Dropdown extends PureComponent {
+  constructor(props) {
+    super(props)
 
-export class Dropdown extends Component {
+    this.state = {
+      haveText: '',
+    }
+  }
   render() {
+    const { haveText } = this.state
+    const { isOpen } = this.props
+
     return (
-      <div>
-        <Query query={getAllCategories}>
-          {({ loading, data }) => {
-            if (loading) {
-              return <div>loading</div>
-            }
-            const { currencies } = data
-            return (
-              <select
-                onChange={this.props.selectCurrency}
-                id="select"
-                className="select"
-              >
-                {currencies.map((s) => {
-                  return (
-                    <option value={s.symbol} className="option">
-                      {s.symbol}
-                    </option>
-                  )
-                })}
-              </select>
-            )
-          }}
-        </Query>
+      <div
+        className={isOpen ? 'dropdown active-dd' : 'dropdown'}
+        onClick={() => {
+          this.props.handleClick()
+        }}
+      >
+        <div id="dd-text" data-iso={haveText} className="dropdown-text">
+          {!haveText ? '$' : haveText}
+        </div>
+        <div className={isOpen ? 'modal-backdrop' : ''}></div>
+        {this.itemList(this.props.currencyList)}
       </div>
     )
   }
+
+  handleText = (e) => {
+    this.setState({
+      haveText: e.currentTarget.textContent.slice(0, 2),
+    })
+  }
+
+  itemList = (props) => {
+    let i = 0
+    const list = props.map((item) => (
+      <div key={item} onClick={this.handleText}>
+        <li
+          className="dropdown-item"
+          key={item.toString()}
+          value={i++}
+          onClick={(e) => {
+            this.props.selectCurrency(e.target.value)
+          }}
+        >
+          {item}
+        </li>
+      </div>
+    ))
+
+    return <div className="dropdown-items"> {list} </div>
+  }
 }
+
+export default Dropdown

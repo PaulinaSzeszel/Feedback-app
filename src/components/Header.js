@@ -1,33 +1,35 @@
 import React, { PureComponent } from 'react'
 import { NavLink } from 'react-router-dom'
-
-import { getAllCategories } from '../query/getQueries'
-import { graphql } from '@apollo/client/react/hoc'
 import CartOverlay from './CartOverlay'
 import { Dropdown } from './Dropdown'
+import { connect } from 'react-redux'
 import logo from '../assets/a-logo.svg'
-
+import { cart, totalQty } from '../Redux/cartSlice'
 class Header extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
       cartOpen: false,
+      isOpen: false,
     }
   }
+  displayCurrencySymbols = () => {
+    const data = this.props.data
+    if (data.loading) {
+      return <div>Loading</div>
+    } else {
+      return data.currencies.map((currency) => {
+        const currencyISO = {
+          $: 'USD',
+          '£': 'GBP',
+          A$: 'AUD',
+          '¥': 'JPY',
+          '₽': 'RUB',
+        }
 
-  componentDidMount() {
-    let target = document.body
-    window.addEventListener('click', (e) => {
-      if (
-        e.target.getAttribute('id') !== 'cart_overlay' &&
-        e.target.getAttribute('id') !== 'quantity_gallery_block'
-      ) {
-        this.setState({ cartOpen: false })
-        target.classList.remove('disable_scroll')
-      } else {
-        target.classList.add('disable_scroll')
-      }
-    })
+        return currency.symbol + ' ' + currencyISO[currency.symbol]
+      })
+    }
   }
   handleClick = () => {
     this.setState({
@@ -46,19 +48,11 @@ class Header extends PureComponent {
   }
   render() {
     const { cartOpen } = this.state
-    const {
-      orders,
-      currency,
-      addQuantity,
-      quantities,
-      removeQuantity,
-      emptyCart,
-      removeItem,
-    } = this.props
+    const { currency, cart, totalQty, categories } = this.props
     return (
       <div className="header">
         <div className="category_list">
-          {getAllCategories.map((category) => {
+          {categories.map((category) => {
             return (
               <li key={category.name} className="category">
                 <NavLink
@@ -75,13 +69,20 @@ class Header extends PureComponent {
 
         <div className="logo">
           <img src={logo} alt="logo" width={40} height={40} />
-          <img src={logo} alt="logo" width={40} height={40} />
         </div>
         <div className="currency">
-          <Dropdown selectCurrency={this.props.selectCurrency} />
+          <Dropdown
+            selectCurrency={this.props.selectCurrency}
+            currencyList={this.displayCurrencySymbols()}
+            isOpen={this.state.isOpen}
+            handleClick={this.handleClick}
+            close={this.close}
+          />
           <button
             onClick={() => {
-              this.setState({ cartOpen: !cartOpen })
+              this.setState({ cartOpen: true })
+              this.setState({ isOpen: false })
+              this.disableOverflow()
             }}
             className="cart-button "
           >
@@ -93,31 +94,27 @@ class Header extends PureComponent {
               src={require('../assets/cart.png')}
             />
           </button>
-          {orders.length > 0 && (
-            <p className="cart_items_counter">
-              {' '}
-              {orders.length + quantities.length}
-            </p>
-          )}
+          {cart.length > 0 && <p className="cart_items_counter"> {totalQty}</p>}
           {cartOpen && (
             <div className="cart_overlay_bag">
-              <div className="sidebar show-cart">
-                <CartOverlay currency={currency} orders={orders} />
-              </div>
               <div
-                onClick={(e) => {
-                  e.stopPropagation()
+                className="sidebar show-cart"
+                onClick={() => {
+                  this.close()
+                  this.enebleOverflow()
                 }}
               >
-                <CartOverlay
-                  currency={currency}
-                  orders={orders}
-                  quantities={quantities}
-                  addQuantity={addQuantity}
-                  removeQuantity={removeQuantity}
-                  emptyCart={emptyCart}
-                  removeItem={removeItem}
-                />
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
+                  <CartOverlay
+                    close={this.close}
+                    enebleOverflow={this.enebleOverflow}
+                    currency={currency}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -127,4 +124,7 @@ class Header extends PureComponent {
   }
 }
 
-export default graphql(getAllCategories)(Header)
+export default connect((state) => ({
+  cart: cart(state),
+  totalQty: totalQty(state),
+}))(Header)

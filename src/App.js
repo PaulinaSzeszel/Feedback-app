@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import Header from './components/Header'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import './App.css'
 import Home from './Pages/Home'
 import Pdp from './Pages/Pdp'
 import { Query } from '@apollo/react-components'

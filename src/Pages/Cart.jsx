@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import ImageSlider from '../components/ImageSlider'
-
+import { addToCart, removeFromCart, cart, totalQty } from '../Redux/cartSlice'
 class Cart extends PureComponent {
   addItem = (product) => {
     this.props.addToCart(product)

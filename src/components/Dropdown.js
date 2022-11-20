@@ -1,74 +1,35 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Query } from '@apollo/react-components'
+import { getAllCategories } from '../query/getQueries'
 
-export class Dropdown extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isOpen: false,
-      haveText: '',
-    }
-  }
-
-  componentDidMount() {
-    const dd = document.querySelector('.dropdown')
-    window.addEventListener('click', (e) => {
-      if (e.target.getAttribute('id') !== 'dd-text') {
-        dd.classList.remove('active-dd')
-      }
-    })
-  }
-
-  componentDidUpdate() {
-    const aud = document.querySelector('#dd-text')
-    if (aud.getAttribute('data-iso') === 'A$') {
-      aud.classList.add('dropdown-text-aud')
-    } else {
-      aud.classList.remove('dropdown-text-aud')
-    }
-  }
-
+export class Dropdown extends Component {
   render() {
-    const { isOpen, haveText } = this.state
-
     return (
-      <div
-        className={isOpen ? 'dropdown active-dd' : 'dropdown'}
-        onClick={this.handleClick}
-      >
-        <div id="dd-text" data-iso={haveText} className="dropdown-text">
-          {!haveText ? '$' : haveText}
-        </div>
-        {this.itemList(this.props.currencyList)}
+      <div>
+        <Query query={getAllCategories}>
+          {({ loading, data }) => {
+            if (loading) {
+              return <div>loading</div>
+            }
+            const { currencies } = data
+            return (
+              <select
+                onChange={this.props.selectCurrency}
+                id="select"
+                className="select"
+              >
+                {currencies.map((s) => {
+                  return (
+                    <option value={s.symbol} className="option">
+                      {s.symbol}
+                    </option>
+                  )
+                })}
+              </select>
+            )
+          }}
+        </Query>
       </div>
     )
   }
-
-  handleClick = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    })
-  }
-
-  handleText = (e) => {
-    this.setState({
-      haveText: e.currentTarget.textContent.slice(0, 2),
-    })
-  }
-
-  itemList = (props) => {
-    const list = props.map((item) => (
-      <div
-        onClick={this.handleText}
-        className="dropdown-item"
-        key={item.toString()}
-      >
-        {item}
-      </div>
-    ))
-
-    return <div className="dropdown-items"> {list} </div>
-  }
 }
-
-export default Dropdown

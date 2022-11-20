@@ -2,20 +2,34 @@ import React, { Component } from 'react'
 import Card from '../components/Card'
 import { Link } from 'react-router-dom'
 import { Query } from '@apollo/react-components'
-import { categoryRequest } from '../query/getQueries'
+import { GET_PRODUCTS_BY_CATEGORY } from '../query/getQueries'
 
 class Home extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      product: [],
+    }
+  }
   render() {
-    const { categoryName, addQuantity, quantities, itemNames } = this.props
+    const { categoryName } = this.props
     return (
       <div>
-        <Query query={categoryRequest(categoryName)}>
+        <Query
+          key={'key'}
+          query={GET_PRODUCTS_BY_CATEGORY}
+          variables={{ input: { title: window.location.pathname.slice(1) } }}
+          fetchPolicy="no-cache"
+          onCompleted={(data) =>
+            this.setState({ product: data.category.products })
+          }
+        >
           {({ loading, data }) => {
             if (loading) {
               return <div>loading</div>
             }
-            const { category } = data
-            const { currency, onAdd } = this.props
+            const products = data.category.products
+            const { currency } = this.props
             return (
               <div>
                 <div className="container">
@@ -24,23 +38,16 @@ class Home extends Component {
                   </h1>
                 </div>
                 <div className="card_set container">
-                  {category.products.map((product) => {
+                  {products.map((product) => {
                     return (
-                      <Link to={`/product/${product.id}`}>
+                      <Link key={product.id} to={`/product/${product.id}`}>
                         <Card
                           key={product.id}
-                          onAdd={onAdd}
                           item={product}
-                          inStock={product.inStock}
-                          source={product.gallery[0]}
-                          name={`${product.brand} ${product.name}`}
                           price={
                             product.prices[currency].currency.symbol +
                             product.prices[currency].amount
                           }
-                          addQuantity={addQuantity}
-                          quantities={quantities}
-                          itemNames={itemNames}
                         />
                       </Link>
                     )

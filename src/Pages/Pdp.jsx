@@ -1,6 +1,7 @@
 import { Query } from '@apollo/react-components'
 import React, { Component } from 'react'
 import { productRequest } from '../query/getQueries'
+import { getOccurrence } from '..//utils/utilFunc'
 import {
   convertHexToSwatch,
   getSelectedAtr,
@@ -53,7 +54,8 @@ export default class Pdp extends Component {
 
   render() {
     const { productId } = this.state
-    const { currency, onAdd, itemNames } = this.props
+    const { currency, onAdd, itemNames, quantities, addQuantity } = this.props
+    const parse = require('html-react-parser')
 
     return (
       <Query query={productRequest(productId)}>
@@ -62,7 +64,7 @@ export default class Pdp extends Component {
             return <div>loading</div>
           }
           const { product } = data
-          const parse = require('html-react-parser')
+
           return (
             <div
               className="PDP"
@@ -193,6 +195,17 @@ export default class Pdp extends Component {
                                     getSelectedCol()
                                       .map((val) => val.value)
                                       .join('')
+                                )
+                              } else {
+                                addQuantity(
+                                  product.name +
+                                    getSelectedAtr()
+                                      .map((val) => val.value)
+                                      .join('') +
+                                    getSelectedCol()
+                                      .map((val) => val.value)
+                                      .join('') +
+                                    getOccurrence(quantities, product.name)
                                 )
                               }
                             }

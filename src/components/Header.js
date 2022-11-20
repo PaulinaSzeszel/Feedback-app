@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 import { NavLink } from 'react-router-dom'
-import { getAllProducts } from '../query/getQueries'
+
 import { getAllCategories } from '../query/getQueries'
 import { graphql } from '@apollo/client/react/hoc'
 import CartOverlay from './CartOverlay'
-import { Dropdown } from './Dropdown'
-import { connect } from 'react-redux'
+
+import { Currency } from '../App'
 import logo from '../assets/a-logo.svg'
-import { cart, totalQty } from '../Redux/cartSlice'
+
 class Header extends PureComponent {
   constructor(props) {
     super(props)
@@ -34,6 +34,20 @@ class Header extends PureComponent {
       })
     }
   }
+  componentDidMount() {
+    let target = document.body
+    window.addEventListener('click', (e) => {
+      if (
+        e.target.getAttribute('id') !== 'cart_overlay' &&
+        e.target.getAttribute('id') !== 'quantity_gallery_block'
+      ) {
+        this.setState({ cartOpen: false })
+        target.classList.remove('disable_scroll')
+      } else {
+        target.classList.add('disable_scroll')
+      }
+    })
+  }
   handleClick = () => {
     this.setState({
       isOpen: !this.state.isOpen,
@@ -51,7 +65,15 @@ class Header extends PureComponent {
   }
   render() {
     const { cartOpen } = this.state
-    const { orders, currency } = this.props
+    const {
+      orders,
+      currency,
+      addQuantity,
+      quantities,
+      removeQuantity,
+      emptyCart,
+      removeItem,
+    } = this.props
     return (
       <div className="header">
         <div className="category_list">
@@ -75,18 +97,10 @@ class Header extends PureComponent {
           <img src={logo} alt="logo" width={40} height={40} />
         </div>
         <div className="currency">
-          <Dropdown
-            selectCurrency={this.props.selectCurrency}
-            currencyList={this.displayCurrencySymbols()}
-            isOpen={this.state.isOpen}
-            handleClick={this.handleClick}
-            close={this.close}
-          />
+          <Currency selectCurrency={this.props.selectCurrency} />
           <button
             onClick={() => {
-              this.setState({ cartOpen: true })
-              this.setState({ isOpen: false })
-              this.disableOverflow()
+              this.setState({ cartOpen: !cartOpen })
             }}
             className="cart-button "
           >
@@ -99,7 +113,10 @@ class Header extends PureComponent {
             />
           </button>
           {orders.length > 0 && (
-            <p className="cart_items_counter"> {orders.length}</p>
+            <p className="cart_items_counter">
+              {' '}
+              {orders.length + quantities.length}
+            </p>
           )}
           {cartOpen && (
             <div className="cart_overlay_bag">
@@ -112,9 +129,13 @@ class Header extends PureComponent {
                 }}
               >
                 <CartOverlay
-                  close={this.close}
-                  enebleOverflow={this.enebleOverflow}
                   currency={currency}
+                  orders={orders}
+                  quantities={quantities}
+                  addQuantity={addQuantity}
+                  removeQuantity={removeQuantity}
+                  emptyCart={emptyCart}
+                  removeItem={removeItem}
                 />
               </div>
             </div>

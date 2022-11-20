@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import Header from './components/Header'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import './App.css'
 import Home from './Pages/Home'
 import Pdp from './Pages/Pdp'
 import { Query } from '@apollo/react-components'
 import { getAllCategories } from './query/getQueries'
 import Cart from './Pages/Cart'
 
-class App extends Component {
+class App extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -18,15 +19,18 @@ class App extends Component {
   selectCurrency = (value) => {
     this.setState({ currencyKey: value })
   }
-
   render() {
     return (
       <div className="App">
         <div className="container">
-          <Query query={getAllCategories}>
+          <Query
+            key={'key4'}
+            query={getAllCategories}
+            fetchPolicy="network-only"
+          >
             {({ loading, data }) => {
               if (loading) {
-                return <div>loading</div>
+                return <div>load</div>
               }
               const { categories } = data
               const { currencyKey } = this.state
@@ -36,29 +40,27 @@ class App extends Component {
                     currency={currencyKey}
                     data={data}
                     selectCurrency={this.selectCurrency}
+                    categories={categories}
                   />
                   <Routes>
                     <Route
                       path="/React-shop"
                       element={<Navigate to="/home" />}
                     />
-                    <Route
-                      path={`/${categories[0].name}`}
-                      element={
-                        <Home
-                          categoryName={categories[0].name}
-                          currency={currencyKey}
+                    {categories.map((cat) => {
+                      return (
+                        <Route
+                          key={cat.name}
+                          path={`/${cat.name}`}
+                          element={
+                            <Home
+                              categoryName={cat.name}
+                              currency={currencyKey}
+                            />
+                          }
                         />
-                      }
-                    />
-                    <Route
-                      path={`/${categories[1].name}`}
-                      element={<Home categoryName={categories[1].name} />}
-                    />
-                    <Route
-                      path={`/${categories[2].name}`}
-                      element={<Home categoryName={categories[2].name} />}
-                    />
+                      )
+                    })}
 
                     <Route
                       exact

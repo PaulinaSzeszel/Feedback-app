@@ -1,85 +1,19 @@
-import React, { PureComponent } from 'react'
-import Header from './components/Header'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import Home from './Pages/Home'
-import Pdp from './Pages/Pdp'
-import { Query } from '@apollo/react-components'
-import { getAllCategories } from './query/getQueries'
-import Cart from './Pages/Cart'
+import './App.css'
+import Navbar from './components/Navbar'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-class App extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      currencyKey: 0,
-    }
-    this.selectCurrency = this.selectCurrency.bind(this)
-  }
-  selectCurrency = (value) => {
-    this.setState({ currencyKey: value })
-  }
-  render() {
-    return (
-      <div className="App">
-        <div className="container">
-          <Query
-            key={'key4'}
-            query={getAllCategories}
-            fetchPolicy="network-only"
-          >
-            {({ loading, data }) => {
-              if (loading) {
-                return <div>load</div>
-              }
-              const { categories } = data
-              const { currencyKey } = this.state
-              return (
-                <div>
-                  <Header
-                    currency={currencyKey}
-                    data={data}
-                    selectCurrency={this.selectCurrency}
-                    categories={categories}
-                  />
-                  <Routes>
-                    <Route
-                      path="/React-shop"
-                      element={<Navigate to="/home" />}
-                    />
-                    {categories.map((cat) => {
-                      return (
-                        <Route
-                          key={cat.name}
-                          path={`/${cat.name}`}
-                          element={
-                            <Home
-                              categoryName={cat.name}
-                              currency={currencyKey}
-                            />
-                          }
-                        />
-                      )
-                    })}
+function App() {
+  return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" />
+        <Route path="/woman" />
+        <Route path="/man" />
+        <Route path="/kids" />
+      </Routes>
+    </Router>
+  )
+};
 
-                    <Route
-                      exact
-                      path="/product/:productID"
-                      element={<Pdp currency={currencyKey} />}
-                    />
-                    <Route
-                      exact
-                      path="/cart"
-                      element={<Cart currency={currencyKey} />}
-                    />
-                  </Routes>
-                </div>
-              )
-            }}
-          </Query>
-        </div>
-      </div>
-    )
-  }
-}
-
-export { App }
+export default App

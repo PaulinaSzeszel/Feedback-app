@@ -120,37 +120,38 @@ class CartOverLay extends Component {
                         .amount
                     }
                   </div>
+
+                  {filtered.attributes.map((attribute) => {
+                    return attribute.type === 'text' ? (
+                      <Fragment key={attribute.ProductId}>
+                        <div className="attributeContainer">
+                          <div className="attributeTitle">{attribute.name}</div>
+                          {attribute.items.map((item) => (
+                            <div
+                              className="attributeContainerItems"
+                              key={item.id}
+                            >
+                              {item.value}
+                            </div>
+                          ))}
+                        </div>
+                      </Fragment>
+                    ) : (
+                      <Fragment key={attribute.ProductId}>
+                        <div className="attributeContainer">
+                          <div className="attributeTitle">{attribute.name}</div>
+                          {attribute.items.map((item) => (
+                            <div
+                              key={item.id}
+                              className="swatchBoxGrid"
+                              style={{ background: item.value }}
+                            ></div>
+                          ))}
+                        </div>
+                      </Fragment>
+                    )
+                  })}
                 </div>
-                {filtered.attributes.map((attribute) => {
-                  return attribute.type === 'text' ? (
-                    <Fragment key={attribute.ProductId}>
-                      <div className="attributeContainer">
-                        <div className="attributeTitle">{attribute.name}</div>
-                        {attribute.items.map((item) => (
-                          <div
-                            className="attributeContainerItems"
-                            key={item.id}
-                          >
-                            {item.value}
-                          </div>
-                        ))}
-                      </div>
-                    </Fragment>
-                  ) : (
-                    <Fragment key={attribute.ProductId}>
-                      <div className="attributeContainer">
-                        <div className="attributeTitle">{attribute.name}</div>
-                        {attribute.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="swatchBoxGrid"
-                            style={{ background: item.value }}
-                          ></div>
-                        ))}
-                      </div>
-                    </Fragment>
-                  )
-                })}
               </Fragment>
             )
           )}

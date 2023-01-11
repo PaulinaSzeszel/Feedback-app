@@ -29,7 +29,6 @@
 }
 
 .attributeContainer {
-  margin-top: -80px;
   order: 3;
   display: flex;
   grid-column: 1/2;
@@ -52,7 +51,7 @@
 .attributeContainerItems {
   align-self: flex-start;
   font-family: Source Sans Pro;
-  margin: 0px 0px 80px 0px;
+  margin: 0px 0px 20px 0px;
   border: #1d1f22 1px solid;
   font-size: 14px;
   font-weight: 400;
@@ -103,6 +102,7 @@
 }
 
 .cartIcon {
+  margin-top: -150px;
   order: 5;
   display: flex;
   width: 121px;
@@ -117,6 +117,7 @@
   height: 50px;
   width: 45px;
   border-radius: 0px;
+  margin-top: -150px;
 }
 
 .plusBTN {

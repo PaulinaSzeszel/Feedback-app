@@ -16,6 +16,7 @@
     "predeploy-builder": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-flexbox-grid": "^2.1.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
@@ -51,8 +52,10 @@
     ]
   },
   "devDependencies": {
+    "css-loader": "^6.7.3",
     "dart-sass": "^1.25.0",
     "gh-pages": "^4.0.0",
-    "node-sass": "npm:dart-sass@^1.25.0"
+    "node-sass": "npm:dart-sass@^1.25.0",
+    "style-loader": "^3.3.1"
   }
 }

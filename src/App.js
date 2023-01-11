@@ -1,19 +1,11 @@
-import './App.css'
-import Navbar from './components/Navbar'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Component } from 'react'
+import Main from './components/Main'
+import data from './data'
 
-function App() {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" />
-        <Route path="/woman" />
-        <Route path="/man" />
-        <Route path="/kids" />
-      </Routes>
-    </Router>
-  )
-};
+class App extends Component {
+  render() {
+    return <Main data={data} />
+  }
+}
 
 export default App

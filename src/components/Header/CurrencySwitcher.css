@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+.currencySign {
+  border: none;
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 160%;
+  padding: 3px;
+  margin: 8px;
+  float: right;
+  position: absolute;
+  top: 0.3%;
+  right: 12%;
+  width: 41px;
+  height: 40px;
+  cursor: pointer;
+  background-color: #fff;
+}
